@@ -1,70 +1,189 @@
-# Getting Started with Create React App
+# 🚀 Store SWR Demo
+> This repository for demo only. NPM Package still published privately by Author [here](https://github.com/gadingnst/store-swr).
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+Live at: https://store-swr-demo.sutanlab.id
 
-## Available Scripts
+***
 
-In the project directory, you can run:
+# Package Docs
+## ♻️ Store SWR
+Zero-setup & simple state management for React Components with SWR. So you can focus on your awesome React Project and not waste another afternoon on the setup & configuring your global state. 🌄
 
-### `npm start`
+## Table of Contents
+- [🚀 Store SWR Demo](#-store-swr-demo)
+- [Package Docs](#package-docs)
+  - [♻️ Store SWR](#️-store-swr)
+  - [Table of Contents](#table-of-contents)
+  - [Getting Started](#getting-started)
+    - [Install](#install)
+    - [Usage](#usage)
+      - [Create a store object](#create-a-store-object)
+      - [Using store on your component](#using-store-on-your-component)
+      - [TypeScript](#typescript)
+    - [Best Practice](#best-practice)
+      - [Custom hooks](#custom-hooks)
+      - [Using store on your component](#using-store-on-your-component-1)
+  - [Demo](#demo)
+  - [Publishing](#publishing)
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+## Getting Started
+### Install
+- Create a new file named `.npmrc` in your project root directory.
+- Add the following content to that file:
+```
+@gadingnst:registry=https://npm.pkg.github.com/
+//npm.pkg.github.com/:_authToken=${GITHUB_PACKAGE_TOKEN}
+```
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+- You can generate `${GITHUB_PACKAGE_TOKEN}` in your profile settings here: https://github.com/settings/tokens
+- Choose the token expiration according to what you want.
+- In creating Github Token, check only `read:packages` permissions, Click `Generate Token` button.
+- Then copy the token and replace it in the `${GITHUB_PACKAGE_TOKEN}`. Or you can just define it on your Environment Variables, see: https://stackoverflow.com/a/55578270/8112320
+- After that, run following command.
+```sh
+npm install @gadingnst/store-swr
 
-### `npm test`
+//or
+yarn add @gadingnst/store-swr
+```
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+### Usage
+#### Create a store object
+Create a new file for your global state on your root directory. Example: `stores/app.js`
+```js
+// file: stores/app.js
 
-### `npm run build`
+export const APP_COUNT = {
+  key: "@app/count", // (Required) state key
+  initial: 0, // <- (Required) initial state
+  persist: false // <- (Optional) if you want to persist the state to local storage, then set it to true.
+};
+```
+#### Using store on your component
+```jsx
+// file: components/SetCountComponent.js
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+import { useStore } from "@gadingnst/store-swr";
+import { APP_COUNT } from "stores/app";
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+function SetCountComponent() {
+  const [count, setCount] = useStore(APP_COUNT);
+  return (
+    <div>
+      <button onClick={() => setCount(count - 1)}>
+        (-) Decrease Count
+      </button>
+      &nbsp;
+      <button onClick={() => setCount(count + 1)}>
+        (+) Increase Count
+      </button>
+    </div>
+  );
+}
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+export default SetCountComponent;
+```
 
-### `npm run eject`
+```jsx
+// file: components/GetCountComponent.js
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+import { useStore } from "@gadingnst/store-swr";
+import { APP_COUNT } from "stores/app";
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+function GetCountComponent() {
+  const [count] = useStore(APP_COUNT);
+  return (
+    <div>
+      <p>Current Count: {count}</p>
+    </div>
+  );
+}
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+export default GetCountComponent;
+```
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+#### TypeScript
+```ts
+// file: stores/app.ts
+import type { Store } from "@gadingnst/store-swr";
 
-## Learn More
+export const APP_COUNT: Store<number> = {
+  key: "@app/count",
+  initial: 0,
+  persist: false
+};
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+// interface Store is generic type. It must be passed type parameter
+```
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+### Best Practice
+#### Custom hooks
+Instead of creating store object in `stores/app.js` file, you can wrap it into custom hooks. Example: `stores/count.js`.
+```js
+// file: stores/count.js
 
-### Code Splitting
+import useStore from "@gadingnst/store-swr";
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+const useCount = () => useStore({
+  key: "@app/count",
+  initial: 0,
+  persist: false
+});
 
-### Analyzing the Bundle Size
+export default useCount;
+```
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+#### Using store on your component
+```jsx
+// file: components/SetCountComponent.js
 
-### Making a Progressive Web App
+import useCount from "stores/count";
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
+function SetCountComponent() {
+  const [, setCount] = useCount(); // <- `[, ]` skipping first index of the array.
+  return (
+    <div>
+      <button onClick={() => setCount(prev => prev - 1)}>
+        (-) Decrease Count
+      </button>
+      &nbsp;
+      <button onClick={() => setCount(prev => prev + 1)}>
+        (+) Increase Count
+      </button>
+    </div>
+  );
+}
 
-### Advanced Configuration
+export default SetCountComponent;
+```
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
+```jsx
+// file: components/GetCountComponent.js
 
-### Deployment
+import useCount from "stores/count";
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
+function GetCountComponent() {
+  const [count] = useCount();
+  return (
+    <div>
+      <p>Current Count: {count}</p>
+    </div>
+  );
+}
 
-### `npm run build` fails to minify
+export default GetCountComponent;
+```
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+## Demo
+> You can see demo repository [here](https://github.com/gadingnst/store-swr-demo)
+
+## Publishing
+- Before pushing your changes to Github, make sure that `version` in `package.json` is changed to newest version. Then run `npm install` for synchronize it to `package-lock.json`
+- After your changes have been merged on branch `main`, you can publish the packages by creating new Relase here: https://github.com/gadingnst/store-swr/releases/new
+- Create new `tag`, make sure the `tag` name is same as the `version` in `package.json`.
+- You can write Release title and notes here. Or you can use auto-generated release title and notes.
+- Click `Publish Release` button, then wait the package to be published.
+
+---
+
+© 2022 — Sutan Gading Fadhillah Nasution
