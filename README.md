@@ -1,7 +1,8 @@
 # 🚀 Store SWR Demo
 > This repository for demo only. NPM Package still published privately by Author [here](https://github.com/gadingnst/store-swr).
 
-Live at: https://store-swr-demo.sutanlab.id
+- You can check installed package `@gadingnst/store-swr` at [package.json](https://github.com/gadingnst/store-swr-demo/blob/main/package.json#L6)
+- Live at: https://store-swr-demo.sutanlab.id
 
 ***
 
