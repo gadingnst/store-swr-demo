@@ -1,8 +1,8 @@
 import useStore from "@gadingnst/store-swr"
 
-const useCount = (initial = 0) => useStore({
+const useCount = () => useStore({
   key: "@app/count", // (Required) state key
-  initial, // <- (Required) initial state
+  initial: 0, // <- (Required) initial state
   persist: false // <- (Optional) if you want to persist the state to local storage, then set it to true.
 })
 
