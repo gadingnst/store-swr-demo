@@ -7,7 +7,7 @@ import "./App.css"
 function App() {
   return (
     <BrowserRouter>
-    <GitHubBadge />
+      <GitHubBadge />
       <Routes>
         <Route path="/" exact element={<Home />} />
         <Route path="/about" element={<About />} />
