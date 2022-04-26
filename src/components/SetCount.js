@@ -1,15 +1,27 @@
 import useCount from "../stores/count"
+import useCountPersisted from "../stores/count-persisted";
 
 function SetCount() {
   const [, setCount] = useCount()
+  const [, setCountPersisted] = useCountPersisted()
+
+  const decreaseCount = () => {
+    setCount(prev => prev - 1)
+    setCountPersisted(prev => prev - 1)
+  }
+
+  const increaseCount = () => {
+    setCount(prev => prev + 1)
+    setCountPersisted(prev => prev + 1)
+  }
 
   return (
     <div>
-      <button onClick={() => setCount(prev => prev - 1)}>
+      <button onClick={decreaseCount}>
         (-) Decrease Count
       </button>
       &nbsp;
-      <button onClick={() => setCount(prev => prev + 1)}>
+      <button onClick={increaseCount}>
         (+) Increase Count
       </button>
     </div>

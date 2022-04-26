@@ -11,6 +11,11 @@ const Home = () => {
         <p>
           This is Home page.
         </p>
+        <p style={{ fontSize: 14, marginTop: -20 }}>
+          See About page to make sure that state will be there.
+          <br />
+          Refresh the page to make sure that persisted & normal state are different.
+        </p>
         <SetCount />
         <GetCount />
         <Link className="App-link" to="/about">
